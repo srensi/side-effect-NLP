@@ -1,6 +1,9 @@
 # side-effect-NLP
 NLP Algorithms for detecting adverse events in patient narratives.
 
+# Data download
+curl http://evexdb.org/pmresources/vec-space-models/PMC-w2v.bin
+
 ## Strategy
 Word Vector and other resources
 BioLab NLP homepage: http://bio.nlplab.org/#word-vectors
