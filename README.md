@@ -2,19 +2,19 @@
 NLP Algorithms for detecting adverse events in patient narratives.
 
 # Data download
-cd side-effect-NLP
-mkdir data
-cd data
-wget http://evexdb.org/pmresources/vec-space-models/PMC-w2v.bin
+cd side-effect-NLP  
+mkdir data  
+cd data  
+wget http://evexdb.org/pmresources/vec-space-models/PMC-w2v.bin  
 
 ## Strategy
-Word Vector and other resources
-BioLab NLP homepage: http://bio.nlplab.org/#word-vectors
-Pretrained Vectors: http://evexdb.org/pmresources/vec-space-models/
-Side Effect Database: http://sideeffects.embl.de/
-Pubmed (biomedical lit database): https://www.ncbi.nlm.nih.gov/pubmed/
+Word Vector and other resources  
+BioLab NLP homepage: http://bio.nlplab.org/#word-vectors  
+Pretrained Vectors: http://evexdb.org/pmresources/vec-space-models/  
+Side Effect Database: http://sideeffects.embl.de/  
+Pubmed (biomedical lit database): https://www.ncbi.nlm.nih.gov/pubmed/  
 
-Pseudo Code
+## Pseudo Code
 
 Step 0.
 Pull all word vectors for set of MedDRA terms Y = (y_1, y_2, …, y_n)
