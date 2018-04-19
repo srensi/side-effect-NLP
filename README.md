@@ -47,3 +47,5 @@ Twiiter dataset: https://healthlanguageprocessing.files.wordpress.com/2018/03/ad
 Script for downloading tweets: https://healthlanguageprocessing.files.wordpress.com/2018/03/download_binary_twitter_data.zip  
 Polarity cues (?): https://healthlanguageprocessing.files.wordpress.com/2018/03/polaritycues.zip  
 Adverse drug reaction (ADR) lexicon: https://healthlanguageprocessing.files.wordpress.com/2018/03/adr_lexicon.zip  
+Download Repo: https://bitbucket.org/asarker/adrbinaryclassifier/get/bce087f4cc5d.zip  
+
