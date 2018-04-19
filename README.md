@@ -2,6 +2,9 @@
 NLP Algorithms for detecting adverse events in patient narratives.
 
 # Data download
+cd side-effect-NLP
+mkdir data
+cd data
 wget http://evexdb.org/pmresources/vec-space-models/PMC-w2v.bin
 
 ## Strategy
