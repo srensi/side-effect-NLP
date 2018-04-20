@@ -6,8 +6,7 @@ w1 = "hypertension"
 w2 = "symptoms"
 
 # Load word vectors
-word_vectors = KeyedVectors.load_word2vec_format('~/Research/word2vec_stuff/bio-nlp-lab-mancester/Pubmed-w2v.bin',
-                                                 binary=True)
+word_vectors = KeyedVectors.load_word2vec_format('../data/PubMed-and-PMC-w2v.bin', binary=True)
 
 # Get rid of stuff in quotes
 """

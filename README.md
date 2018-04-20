@@ -1,7 +1,7 @@
 # side-effect-NLP
 NLP Algorithms for detecting adverse events in patient narratives.
 
-# Data download
+## Data download
 cd side-effect-NLP  
 mkdir data  
 cd data  
@@ -42,8 +42,8 @@ Side Effects File.
 Note columns 5 and 6 are most important. (indexing from 1)
 
 
-## More Data Resources
-# Binary ADR Classifier for Tweets
+# More Data Resources
+## Binary ADR Classifier for Tweets
 Twiiter dataset: https://healthlanguageprocessing.files.wordpress.com/2018/03/adr_classify_twitter_data.zip  
 Script for downloading tweets: https://healthlanguageprocessing.files.wordpress.com/2018/03/download_binary_twitter_data.zip  
 Polarity cues (?): https://healthlanguageprocessing.files.wordpress.com/2018/03/polaritycues.zip  
