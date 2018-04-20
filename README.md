@@ -1,14 +1,20 @@
 # side-effect-NLP
 NLP Algorithms for detecting adverse events in patient narratives.
 
-## Strategy
-Word Vector and other resources
-BioLab NLP homepage: http://bio.nlplab.org/#word-vectors
-Pretrained Vectors: http://evexdb.org/pmresources/vec-space-models/
-Side Effect Database: http://sideeffects.embl.de/
-Pubmed (biomedical lit database): https://www.ncbi.nlm.nih.gov/pubmed/
+# Data download
+cd side-effect-NLP  
+mkdir data  
+cd data  
+wget http://evexdb.org/pmresources/vec-space-models/PMC-w2v.bin  
 
-Pseudo Code
+## Strategy
+Word Vector and other resources  
+BioLab NLP homepage: http://bio.nlplab.org/#word-vectors  
+Pretrained Vectors: http://evexdb.org/pmresources/vec-space-models/  
+Side Effect Database: http://sideeffects.embl.de/  
+Pubmed (biomedical lit database): https://www.ncbi.nlm.nih.gov/pubmed/  
+
+## Pseudo Code
 
 Step 0.
 Pull all word vectors for set of MedDRA terms Y = (y_1, y_2, …, y_n)
@@ -33,3 +39,13 @@ return argmin(Z)
 
 Side Effects File.
 Note columns 5 and 6 are most important. (indexing from 1)
+
+
+## More Data Resources
+# Binary ADR Classifier for Tweets
+Twiiter dataset: https://healthlanguageprocessing.files.wordpress.com/2018/03/adr_classify_twitter_data.zip  
+Script for downloading tweets: https://healthlanguageprocessing.files.wordpress.com/2018/03/download_binary_twitter_data.zip  
+Polarity cues (?): https://healthlanguageprocessing.files.wordpress.com/2018/03/polaritycues.zip  
+Adverse drug reaction (ADR) lexicon: https://healthlanguageprocessing.files.wordpress.com/2018/03/adr_lexicon.zip  
+Download Repo: https://bitbucket.org/asarker/adrbinaryclassifier/get/bce087f4cc5d.zip  
+

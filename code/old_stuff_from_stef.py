@@ -1,10 +1,16 @@
 from gensim.models.keyedvectors import KeyedVectors
 
+
+# Change to load adverse event words from file
 w1 = "hypertension"
 w2 = "symptoms"
+
 # Load word vectors
 word_vectors = KeyedVectors.load_word2vec_format('~/Research/word2vec_stuff/bio-nlp-lab-mancester/Pubmed-w2v.bin',
                                                  binary=True)
+
+# Get rid of stuff in quotes
+"""
 # test3 = word_vectors.most_similar_cosmul(positive=[w2, w1], topn=20)
 test = word_vectors.most_similar_cosmul(positive=w2)
 test2 = word_vectors.most_similar_cosmul(positive=w1)
@@ -21,3 +27,4 @@ print(stuff)
 # rev_test = word_vectors.most_similar(positive=[i[0] for i in test3])
 # rev_test = word_vectors.most_similar(positive=list(stuff), topn=20)
 # print(rev_test)
+"""
