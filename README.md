@@ -44,11 +44,12 @@ Note columns 5 and 6 are most important. (indexing from 1)
 
 # More Data Resources
 ## Binary ADR Classifier for Tweets
-Twiiter dataset for binary classification: https://healthlanguageprocessing.files.wordpress.com/2018/03/adr_classify_twitter_data.zip 
+Azadeh's adverse drug reaction (ADR) lexicon: https://healthlanguageprocessing.files.wordpress.com/2018/03/adr_lexicon.zip    
+Annotated (labeled) tweets: https://healthlanguageprocessing.files.wordpress.com/2018/03/download_tweets1.zip  
+
+Twiiter dataset for binary classification: https://healthlanguageprocessing.files.wordpress.com/2018/03/adr_classify_twitter_data.zip  
 Script for downloading tweets: https://healthlanguageprocessing.files.wordpress.com/2018/03/download_binary_twitter_data.zip  
 Polarity cues (?): https://healthlanguageprocessing.files.wordpress.com/2018/03/polaritycues.zip  
-Azadeh's Adverse drug reaction (ADR) lexicon: https://healthlanguageprocessing.files.wordpress.com/2018/03/adr_lexicon.zip    
-Annotated (labeled) tweets: https://healthlanguageprocessing.files.wordpress.com/2018/03/download_tweets1.zip  
 General twitter dataset: https://healthlanguageprocessing.files.wordpress.com/2018/03/download_tweets.zip  
-Download Repo: https://bitbucket.org/asarker/adrbinaryclassifier/get/bce087f4cc5d.zip  
+Binary Classifier Repo: https://bitbucket.org/asarker/adrbinaryclassifier/get/bce087f4cc5d.zip  
 
