@@ -13,6 +13,7 @@ BioLab NLP homepage: http://bio.nlplab.org/#word-vectors
 Pretrained Vectors: http://evexdb.org/pmresources/vec-space-models/  
 Side Effect Database: http://sideeffects.embl.de/  
 Pubmed (biomedical lit database): https://www.ncbi.nlm.nih.gov/pubmed/  
+Gensim Tutorial: https://radimrehurek.com/gensim/models/word2vec.html  
 
 ## Pseudo Code
 
