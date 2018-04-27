@@ -2,3 +2,4 @@
 *logfile*
 *.tsv
 *.txt
+env/
