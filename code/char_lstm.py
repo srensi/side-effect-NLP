@@ -40,21 +40,19 @@ Tweets = [clean_strings(tweet) for tweet in Tweets]
 # Get total number of characters and dict to encode characters as integers
 characters = set()
 [characters.update(tweet) for tweet in Tweets]
-encoder = dict( (character,idx) for idx, character in enumerate(sorted(characters), 1 ) )  
+encoder = dict( (character, integer) for integer, character in enumerate(sorted(characters), 1 ) )  
 num_characters = len(encoder) + 1
 
 
-# Encode tweets and labels as numeric numpy arrays for LSTM
+# Encode tweets and labels as numeric types for LSTM
 Tweets = [[encoder[character] for character in tweet] for tweet in Tweets]
-Tweets = sequence.pad_sequences(Tweets, maxlen=max_tweet_length, padding='post')
 Labels = numpy.array([ int( float( label ) ) for label in Labels])
-
 
 ## This part trains and evaluates the lstm
 
 # Get index for 80/20 data split
-n_train = numpy.floor( len(Tweets)*0.8 )
-split = int( n_train )
+split = numpy.floor( len(Tweets)*0.8 )
+split = int( split )
 
 # Split into training and test sets
 trainTweets, testTweets = Tweets[:split], Tweets[:-split]
