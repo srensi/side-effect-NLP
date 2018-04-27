@@ -24,9 +24,10 @@ for i in annotations:
 		pass
 
 # Cleans up tweets
-for line in annotated_tweets[:15]:
+for line in annotated_tweets:
 	sentence = line[-1]
 	sentence = nltk.tokenize.word_tokenize(sentence.replace('/', ' '))
 	sentence = [word for word in sentence if word.isalpha()]
 	sentence = [w.lower() for w in sentence if w not in stop_words]
 	line[-1] = sentence
+	print(line)
