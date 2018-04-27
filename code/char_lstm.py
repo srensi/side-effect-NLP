@@ -20,13 +20,14 @@ def clean_strings(text):
 	return re.sub(r'[^\x00-\x7F]+',' ', text.lower())
 
 """
-Start of main program
+Import, clean, and encode the twitter data for the LSTM
 """
 
+
+# Import data
 with open('./binaryclassifier/binary_downloaded.tsv','r') as f:
 	data = [ i.strip().split('\t')  for i in f.readlines() ]
 
-## This fisrt part cleans the data, and gets it ready for lstm
 
 # Shuffle the rows of the data (for cross validation) pull 
 random.shuffle(data)
@@ -48,7 +49,9 @@ num_characters = len(encoder) + 1
 Tweets = [[encoder[character] for character in tweet] for tweet in Tweets]
 Labels = numpy.array([ int( float( label ) ) for label in Labels])
 
-## This part trains and evaluates the lstm
+"""
+Train and test the LSTM
+"""
 
 # Get index for 80/20 data split
 split = numpy.floor( len(Tweets)*0.8 )
