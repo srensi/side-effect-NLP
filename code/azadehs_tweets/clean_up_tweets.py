@@ -23,11 +23,17 @@ for i in annotations:
 	except KeyError:
 		pass
 
+
+vocab = set(['<unk>'])
 # Cleans up tweets
 for line in annotated_tweets:
 	sentence = line[-1]
 	sentence = nltk.tokenize.word_tokenize(sentence.replace('/', ' '))
 	sentence = [word for word in sentence if word.isalpha()]
 	sentence = [w.lower() for w in sentence if w not in stop_words]
+	vocab.update(sentence)
 	line[-1] = sentence
-	print(line)
+
+vocab_map = dict( zip( range(len(vocab)), list(vocab) ) )
+for i,j in vocab_map.items():
+	print(i,j)
