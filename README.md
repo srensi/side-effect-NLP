@@ -8,6 +8,11 @@ cd data
 wget http://evexdb.org/pmresources/vec-space-models/PMC-w2v.bin  
 
 ## Strategy
+Download Tweets.  
+Connect annotations to tweets.  
+(1) Predict ADR or not ADR from tweet, using LSTM.  
+(2) Predict ADR classification from tweet  
+
 Word Vector and other resources  
 BioLab NLP homepage: http://bio.nlplab.org/#word-vectors  
 Pretrained Vectors: http://evexdb.org/pmresources/vec-space-models/  
@@ -53,4 +58,7 @@ Twiiter dataset for binary classification: https://healthlanguageprocessing.file
 Script for downloading tweets: https://healthlanguageprocessing.files.wordpress.com/2018/03/download_binary_twitter_data.zip  
 Polarity cues (?): https://healthlanguageprocessing.files.wordpress.com/2018/03/polaritycues.zip  
 Binary Classifier Repo: https://bitbucket.org/asarker/adrbinaryclassifier/get/bce087f4cc5d.zip  
+
+## Binary LSTM
+LSTM for Sequence Classification: https://machinelearningmastery.com/sequence-classification-lstm-recurrent-neural-networks-python-keras/
 
