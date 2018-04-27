@@ -3,3 +3,4 @@
 *.tsv
 *.txt
 env/
+data/
