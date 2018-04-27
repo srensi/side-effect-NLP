@@ -7,10 +7,6 @@ nltk.download('stopwords')
 nltk.download('punkt')
 stop_words = stopwords.words('english')
 
-"""
-This section is only for Azadeh's data (not binary classification 
-"""
-
 # Import tweets and annotaiton
 with open('/Users/srensi/Documents/GitHub/side-effect-NLP/code/azadehs_tweets/train_tweets.tsv','r') as f:
 	tweets = [ i.strip().split('\t')  for i in f.readlines()]
@@ -23,27 +19,14 @@ annotation_map = {i[2]: [i[3]] for i in tweets}
 annotated_tweets = []
 for i in annotations:
 	try:
-		annotated_tweets.append( i[1:] + annotation_map[ i[0] ])
+		annotated_tweets.append(i[1:] + annotation_map[ i[0] ])
 	except KeyError:
 		pass
 
-
-"""
-Use this section for cleaning up tweets
-"""
-
-vocab = set(['<unk>'])
 # Cleans up tweets
-for line in annotated_tweets:
+for line in annotated_tweets[:15]:
 	sentence = line[-1]
 	sentence = nltk.tokenize.word_tokenize(sentence.replace('/', ' '))
 	sentence = [word for word in sentence if word.isalpha()]
 	sentence = [w.lower() for w in sentence if w not in stop_words]
-	vocab.update(sentence)
 	line[-1] = sentence
-	print(line)
-
-# vocab_map = dict( zip( range(len(vocab)), list(vocab) ) )
-# for i,j in vocab_map.items():
-# 	print(i,j)
-
