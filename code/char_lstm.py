@@ -1,4 +1,4 @@
-# Character LSTM with dropout for binary classification of tweets
+# characteracter LSTM with dropout for binary classification of tweets
 import numpy
 import random
 import re
@@ -13,53 +13,61 @@ from keras.preprocessing import sequence
 Global Vars and Functions
 """
 numpy.random.seed(7)	# set random seed for reproducibility
-max_length = 140		# Set max tweet length
+max_tweet_length = 140		# Set max tweet length
 
-# Replaces non-ascii characters with spaces.
+# Coverts to lowercase and replaces non-ascii characteracters with spaces.
 def clean_strings(text):
 	return re.sub(r'[^\x00-\x7F]+',' ', text.lower())
 
 """
 Start of main program
 """
-with open('/Users/srensi/Documents/GitHub/side-effect-NLP/code/binaryclassifier/binary_downloaded.tsv','r') as f:
-	tweets = [ i.strip().split('\t')  for i in f.readlines() ]
 
+with open('./binaryclassifier/binary_downloaded.tsv','r') as f:
+	data = [ i.strip().split('\t')  for i in f.readlines() ]
 
-# Randomize order of tweets in datasets
-random.shuffle(tweets)
+## This fisrt part cleans the data, and gets it ready for lstm
 
-# Pull out tweets (X), and labels (y)
-y , X = zip( *[ [i[-2], i[-1]] for i in tweets] )
+# Shuffle the rows of the data (for cross validation) pull 
+random.shuffle(data)
+
+# Pull out Tweets and their labels
+Labels , Tweets = zip( *[ [label, tweet] for tweet_id, user_id, label, tweet in data] )
 
 # Clean up tweets
-X = [clean_strings(x) for x in X]
+Tweets = [clean_strings(tweet) for tweet in Tweets]
 
-# Map characters in tweets (X) to integers
-chars = set()
-[chars.update(x) for x in X]
-encoder = dict( (c,i) for i, c in enumerate(sorted(chars), 1 ) )  
-X = [[encoder[c] for c in x] for x in X]
+# Get total number of characters and dict to encode characters as integers
+characters = set()
+[characters.update(tweet) for tweet in Tweets]
+encoder = dict( (character,idx) for idx, character in enumerate(sorted(characters), 1 ) )  
+num_characters = len(encoder) + 1
 
-# Convert labels (y) to numpy array
-y = numpy.array([int(float(i)) for i in y])
 
-# Get training set size and number of characters
-n_train = int(numpy.floor(len(tweets)*0.8))
-num_chars = len(encoder) + 1
+# Encode tweets and labels as numeric numpy arrays for LSTM
+Tweets = [[encoder[character] for character in tweet] for tweet in Tweets]
+Tweets = sequence.pad_sequences(Tweets, maxlen=max_tweet_length, padding='post')
+Labels = numpy.array([ int( float( label ) ) for label in Labels])
 
-# Separate ino training and test sets
-y_train, X_train = y[:n_train], X[:n_train]
-y_test, X_test = y[n_train:], X[n_train:] 
+
+## This part trains and evaluates the lstm
+
+# Get index for 80/20 data split
+n_train = numpy.floor( len(Tweets)*0.8 )
+split = int( n_train )
+
+# Split into training and test sets
+trainTweets, testTweets = Tweets[:split], Tweets[:-split]
+trainLabels, testLabels = Labels[:split], Labels[:-split]
 
 # Pad training examples for to make constant length
-X_train = sequence.pad_sequences(X_train, maxlen=max_length, padding='post')
-X_test = sequence.pad_sequences(X_test, maxlen=max_length, padding='post')
+trainTweets = sequence.pad_sequences(trainTweets, maxlen=max_tweet_length, padding='post')
+testTweets = sequence.pad_sequences(testTweets, maxlen=max_tweet_length, padding='post')
 
 # Create the model
 embedding_vecor_length = 32
 model = Sequential()
-model.add(Embedding(num_chars, embedding_vecor_length, input_length=max_length))
+model.add(Embedding(num_characters, embedding_vecor_length, input_length=max_tweet_length))
 model.add(LSTM(100, dropout=0.2, recurrent_dropout=0.2))
 model.add(Dense(1, activation='sigmoid'))
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
