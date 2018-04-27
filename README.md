@@ -8,6 +8,11 @@ cd data
 wget http://evexdb.org/pmresources/vec-space-models/PMC-w2v.bin  
 
 ## Strategy
+Download Tweets.
+Connect annotations to tweets.
+(1) Predict ADR or not ADR from tweet, using LSTM.
+(2) Predict ADR classification from tweet
+
 Word Vector and other resources  
 BioLab NLP homepage: http://bio.nlplab.org/#word-vectors  
 Pretrained Vectors: http://evexdb.org/pmresources/vec-space-models/  
