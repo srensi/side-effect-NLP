@@ -1,6 +1,6 @@
 """
-Characteracter LSTM with dropout for binary classification of tweets.
-Current settings should get around 0.90 accuracy on dataset.
+Character LSTM with dropout for binary classification of tweets. Current settings should get 
+around 0.90 accuracy on dataset.
 """
 
 import numpy
@@ -26,14 +26,12 @@ def clean_strings(text):
 """
 Import, clean, and encode the twitter data for the LSTM
 """
-
-
 # Import data
 with open('./binaryclassifier/binary_downloaded.tsv','r') as f:
 	data = [ i.strip().split('\t')  for i in f.readlines() ]
 
 
-# Shuffle the rows of the data (for cross validation) pull 
+# Shuffle the rows of the data for cross validation
 random.shuffle(data)
 
 # Pull out Tweets and their labels
@@ -42,7 +40,7 @@ Labels , Tweets = zip( *[ [label, tweet] for tweet_id, user_id, label, tweet in 
 # Clean up tweets
 Tweets = [clean_strings(tweet) for tweet in Tweets]
 
-# Get total number of characters and dict to encode characters as integers
+# Get dict to encode characters as integers and total number of characters
 characters = set()
 [characters.update(tweet) for tweet in Tweets]
 encoder = dict( (character, integer) for integer, character in enumerate(sorted(characters), 1 ) )  
@@ -56,8 +54,7 @@ Labels = numpy.array([ int( float( label ) ) for label in Labels])
 """
 Train and test the LSTM
 """
-
-# Get index for 80/20 data split
+# Get index for 80/20 split of data into training and test
 split = numpy.floor( len(Tweets)*0.8 )
 split = int( split )
 
