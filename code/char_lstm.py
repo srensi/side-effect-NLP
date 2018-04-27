@@ -1,4 +1,8 @@
-# characteracter LSTM with dropout for binary classification of tweets
+"""
+Characteracter LSTM with dropout for binary classification of tweets.
+Current settings should get around 0.90 accuracy on dataset.
+"""
+
 import numpy
 import random
 import re
