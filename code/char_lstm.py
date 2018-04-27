@@ -59,8 +59,8 @@ split = numpy.floor( len(Tweets)*0.8 )
 split = int( split )
 
 # Split into training and test sets
-trainTweets, testTweets = Tweets[:split], Tweets[:-split]
-trainLabels, testLabels = Labels[:split], Labels[:-split]
+trainTweets, testTweets = Tweets[:split], Tweets[split:]
+trainLabels, testLabels = Labels[:split], Labels[split:]
 
 # Pad training examples for to make constant length
 trainTweets = sequence.pad_sequences(trainTweets, maxlen=max_tweet_length, padding='post')
