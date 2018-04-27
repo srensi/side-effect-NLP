@@ -54,3 +54,6 @@ Script for downloading tweets: https://healthlanguageprocessing.files.wordpress.
 Polarity cues (?): https://healthlanguageprocessing.files.wordpress.com/2018/03/polaritycues.zip  
 Binary Classifier Repo: https://bitbucket.org/asarker/adrbinaryclassifier/get/bce087f4cc5d.zip  
 
+## Binary LSTM
+LSTM for Sequence Classification: https://machinelearningmastery.com/sequence-classification-lstm-recurrent-neural-networks-python-keras/
+
