@@ -36,7 +36,7 @@ vocab = set(['<unk>'])
 # Cleans up tweets
 for line in annotated_tweets:
 	sentence = line[-1]
-	sentence = nltk.tokenize.word_tokenize(sentence.replace('/', ' '))
+	sentence = nltk.tokenize.word_tokenize(sentence).replace('/', ' ')
 	sentence = [word for word in sentence if word.isalpha()]
 	sentence = [w.lower() for w in sentence if w not in stop_words]
 	vocab.update(sentence)
