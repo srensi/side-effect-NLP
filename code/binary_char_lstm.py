@@ -20,7 +20,7 @@ numpy.random.seed(7)	# set random seed for reproducibility
 max_tweet_length = 140		# Set max tweet length
 
 # Coverts to lowercase and replaces non-ascii characteracters with spaces.
-def clean_strings(text):
+def clean_string(text):
 	return re.sub(r'[^\x00-\x7F]+',' ', text.lower())
 
 """
@@ -38,13 +38,13 @@ random.shuffle(data)
 Labels , Tweets = zip( *[ [label, tweet] for tweet_id, user_id, label, tweet in data] )
 
 # Clean up tweets
-Tweets = [clean_strings(tweet) for tweet in Tweets]
+Tweets = [clean_string(tweet) for tweet in Tweets]
 
 # Get dict to encode characters as integers and total number of characters
-characters = set()
-[characters.update(tweet) for tweet in Tweets]
-encoder = dict( (character, integer) for integer, character in enumerate(sorted(characters), 1 ) )  
-num_characters = len(encoder) + 1
+alphabet = set()
+[alhpabet.update(tweet) for tweet in Tweets]
+encoder = dict( (character, integer) for integer, character in enumerate(sorted(alphabet), 1 ) )  
+alphabet_size = len(encoder) + 1
 
 
 # Encode tweets and labels as numeric types for LSTM
@@ -69,13 +69,13 @@ testTweets = sequence.pad_sequences(testTweets, maxlen=max_tweet_length, padding
 # Create the model
 embedding_vecor_length = 32
 model = Sequential()
-model.add(Embedding(num_characters, embedding_vecor_length, input_length=max_tweet_length))
+model.add(Embedding(alphabet_size, embedding_vecor_length, input_length=max_tweet_length))
 model.add(LSTM(100, dropout=0.2, recurrent_dropout=0.2))
 model.add(Dense(1, activation='sigmoid'))
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 print(model.summary())
-model.fit(X_train, y_train, epochs=3, batch_size=64)
+model.fit(trainTweets, trainLabels, epochs=3, batch_size=64)
 
 # Final evaluation of the model
-scores = model.evaluate(X_test, y_test, verbose=0)
+scores = model.evaluate(testTweets, testLabels, verbose=0)
 print("Accuracy: %.2f%%" % (scores[1]*100))
