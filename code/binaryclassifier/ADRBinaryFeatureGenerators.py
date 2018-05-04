@@ -77,6 +77,7 @@ More data available at: http://diego.asu.edu/Publications/ADRClassify.html
 '''
 
 import string
+import nltk
 from nltk.stem.porter import *
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn import preprocessing
@@ -86,7 +87,9 @@ from collections import defaultdict
 from featureextractionmodules.FeatureExtractionUtilities import FeatureExtractionUtilities
 
 stemmer = PorterStemmer()
-
+nltk.download('averaged_perceptron_tagger')
+nltk.download('universal_tagset')
+nltk.download('wordnet')
 
 def loadFeatureExtractionModuleItems():
     '''
@@ -134,7 +137,7 @@ if __name__ == '__main__':
     loadFeatureExtractionModuleItems()
 
     #LOAD THE DATA -- *SAMPLE SCRIPT USES THE SAME DATA FOR TRAINING AND TESTING*
-    data_set_filename = 'adr_classify_twitter_data_downloaded.txt'
+    data_set_filename = 'binary_downloaded.tsv'
     training_data = loadData(data_set_filename)
     testing_data = loadData(data_set_filename)
 

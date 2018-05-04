@@ -6,6 +6,8 @@ from keras.layers import Dense
 from keras.layers import LSTM
 from keras.layers.embeddings import Embedding
 from keras.preprocessing import sequence
+from sklearn.metrics import confusion_matrix
+# from keras.preprocessing import text
 import nltk
 from nltk.corpus import stopwords
 
@@ -43,7 +45,7 @@ Labels , Tweets = zip( *[ [label, tweet] for tweet_id, user_id, label, tweet in 
 # Clean up tweets
 Tweets = [clean_sentence(tweet) for tweet in Tweets]
 
-# Get dict to encode characters as integers and total number of characters
+# Get dict to encode words as integers and total number of words
 vocab = set(['<unk>'])
 [vocab.update(tweet) for tweet in Tweets]
 encoder = dict( (word, integer) for integer, word in enumerate(sorted(vocab), 1 ) )  
@@ -72,12 +74,14 @@ testTweets = sequence.pad_sequences(testTweets, maxlen=max_tweet_words, padding=
 embedding_vecor_length = 32
 model = Sequential()
 model.add(Embedding(vocab_size, embedding_vecor_length, input_length=max_tweet_words))
-model.add(LSTM(100, dropout=0.2, recurrent_dropout=0.2))
-model.add(Dense(1, activation='sigmoid'))
+model.add(LSTM(15, dropout=0.5, recurrent_dropout=0.2))
+model.add(Dense(1, activation='relu'))
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 print(model.summary())
-model.fit(trainTweets, trainLabels, epochs=3, batch_size=64)
+model.fit(trainTweets, trainLabels, epochs=3, batch_size=200)
 
 # Final evaluation of the model
 scores = model.evaluate(testTweets, testLabels, verbose=0)
+preds = model.predict_classes(testTweets)
 print("Accuracy: %.2f%%" % (scores[1]*100))
+print(confusion_matrix(testLabels, preds))
