@@ -37,8 +37,11 @@ def clean_sentence(text):
 
 # Import data
 with open('./binaryclassifier/binary_downloaded.tsv','r') as f:
-	data = [ i.decode('utf-8').strip().split('\t')  for i in f.readlines() ]
+	stuff = [ i.decode('utf-8').strip().split('\t')  for i in f.readlines() ]
+data_pos = [i for i in stuff if i[2] == '1']
+data_neg = [i for i in stuff if i[2] == '0']
 
+data = data_pos + data_neg[:len(data_pos)]
 
 # Shuffle the rows of the data for cross validation
 random.shuffle(data)
