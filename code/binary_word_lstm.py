@@ -1,11 +1,15 @@
 # LSTM for sequence classification
 import numpy
 import random
+import re
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import LSTM
+from keras.layers import Bidirectional
+from keras.layers import BatchNormalization
 from keras.layers.embeddings import Embedding
 from keras.preprocessing import sequence
+from keras import optimizers
 from sklearn.metrics import confusion_matrix
 # from keras.preprocessing import text
 import nltk
@@ -73,7 +77,7 @@ testTweets = sequence.pad_sequences(testTweets, maxlen=max_tweet_words, padding=
 # Create the model
 embedding_vecor_length = 32
 model = Sequential()
-model.add(Embedding(alphabet_size, embedding_vecor_length, input_length=max_tweet_length))
+model.add(Embedding(vocab_size, embedding_vecor_length, input_length=max_tweet_words))
 # model.add(LSTM(100, dropout=0.2, recurrent_dropout=0.2))
 # model.add(Bidirectional(LSTM(100, dropout=0.5, recurrent_dropout=0.25, return_sequences=True)))
 # model.add(LSTM(100, dropout=0.5, recurrent_dropout=0.25, return_sequences=True))
