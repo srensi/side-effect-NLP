@@ -3,6 +3,7 @@ import numpy as np
 import random
 import re
 import os
+from keras import regularizers
 from keras.utils import to_categorical
 from keras.models import Sequential
 from keras.layers import Dense
@@ -152,19 +153,19 @@ model.add(embedding_layer)
 # model.add(LSTM(100, dropout=0.5, recurrent_dropout=0.25, return_sequences=True))
 # model.add(LSTM(100, dropout=0.8, recurrent_dropout=0.2))
 # model.add(Bidirectional(LSTM(100)))
-model.add(Bidirectional(LSTM(100, return_sequences=True)))
+model.add(Bidirectional(LSTM(100, return_sequences=True, dropout=0.1, recurrent_regularizer=regularizers.l2(0.01), kernel_regularizer=regularizers.l2(0.01))))
 model.add(BatchNormalization())
 # model.add(Bidirectional(LSTM(100,  return_sequences=True)))
-model.add(LSTM(100, return_sequences=True))
+model.add(LSTM(100, return_sequences=True, recurrent_regularizer=regularizers.l2(0.01), kernel_regularizer=regularizers.l2(0.01)))
 model.add(BatchNormalization())
 # model.add(LSTM(100,  return_sequences=True))
 # model.add(LSTM(100,  return_sequences=True))
 # model.add(LSTM(200,  return_sequences=True))
-model.add(LSTM(100))
+model.add(LSTM(100, recurrent_regularizer=regularizers.l2(0.01)))
 model.add(BatchNormalization())
-model.add(Dense(10, activation='relu'))
+model.add(Dense(10, activation='relu', kernel_regularizer=regularizers.l2(0.01)))
 model.add(BatchNormalization())
-model.add(Dense(1, activation='sigmoid'))
+model.add(Dense(1, activation='sigmoid', kernel_regularizer=regularizers.l2(0.01)))
 adam = optimizers.Adam(lr=0.001, amsgrad=True, decay=1e-6)
 model.compile(loss='binary_crossentropy', optimizer=adam, metrics=['accuracy'])
 print(model.summary())
