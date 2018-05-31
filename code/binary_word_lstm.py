@@ -54,24 +54,38 @@ with open(os.path.join(GLOVE_DIR, 'glove.twitter.27B.200d.txt')) as f:
 
 
 # clean up data
-# def clean_sentence(text):
-# 	# print(text)
-# 	sentence = nltk.tokenize.word_tokenize(text.replace('/', ' '))
-# 	sentence = [word for word in sentence if word.isalpha()]
-# 	sentence = [w.lower() for w in sentence if w not in stop_words]
-# 	return sentence
+def clean_sentence(text):
+	# print(text)
+	sentence = nltk.tokenize.word_tokenize(text.replace('/', ' '))
+	sentence = [word for word in sentence if word.isalpha()]
+	sentence = [w.lower() for w in sentence if w not in stop_words]
+	return sentence
 
 
 # Import data
-with open('./binaryclassifier/binary_downloaded.tsv','r') as f:
+with open('../data/adr-pubmed.csv', 'r') as f:
+    pmed_pos = [[0, 0, 1, i[3:-6]] for i in f.readlines()[1:]]
+
+print(pmed_pos[1:10])
+
+with open('../data/no-adr-pubmed.csv', 'r') as f:
+    pmed_neg = [[0, 0, 0, i[3:-6]] for i in f.readlines()[1:]]
+
+with open('../data/binary_downloaded.tsv','rb') as f:
 	stuff = [ i.decode('utf-8').strip().split('\t')  for i in f.readlines() ]
 data_pos = [i for i in stuff if i[2] == '1']
 data_neg = [i for i in stuff if i[2] == '0']
 
-data = data_pos + data_neg[:len(data_pos)]
+pmed = pmed_pos + pmed_neg
+extra_train_data = data_neg[len(data_pos):]
+
+train_data = pmed + extra_train_data
+test_data = data_pos + data_neg[:len(data_pos)]
 
 # Shuffle the rows of the data for cross validation
-random.shuffle(data)
+random.shuffle(train_data)
+random.shuffle(test_data)
+data = train_data + test_data
 
 # Pull out Tweets and their labels
 Labels , Tweets = zip( *[ [label, tweet] for tweet_id, user_id, label, tweet in data] )
@@ -92,7 +106,7 @@ indices = np.arange(Tweets.shape[0])
 np.random.shuffle(indices)
 Tweets = Tweets[indices]
 Labels = Labels[indices]
-num_validation_samples = int(VALIDATION_SPLIT * Tweets.shape[0])
+num_validation_samples = len(test_data)
 
 trainTweets = Tweets[:-num_validation_samples]
 trainLabels = Labels[:-num_validation_samples]
@@ -171,7 +185,7 @@ model.add(Dense(1, activation='sigmoid', kernel_regularizer=regularizers.l2(7e-2
 adam = optimizers.Adam(lr=0.001, amsgrad=True, decay=1e-6)
 model.compile(loss='binary_crossentropy', optimizer=adam, metrics=['accuracy'])
 print(model.summary())
-model.fit(trainTweets, trainLabels, epochs=10, batch_size=256, shuffle=True)
+model.fit(trainTweets, trainLabels, epochs=10, batch_size=512, shuffle=True)
 
 # Final evaluation of the model
 scores = model.evaluate(testTweets, testLabels, verbose=0)
