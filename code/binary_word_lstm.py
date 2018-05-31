@@ -8,12 +8,13 @@ from keras.utils import to_categorical
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import LSTM
+from keras.layers import GRU
 from keras.layers import Bidirectional
 from keras.layers import BatchNormalization
 from keras.layers.embeddings import Embedding
 from keras.preprocessing import sequence
 from keras import optimizers
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, f1_score
 # from keras.preprocessing import text
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
@@ -25,17 +26,17 @@ from keras.preprocessing.sequence import pad_sequences
 # stop_words = stopwords.words('english')
 
 # fix random seed for reproducibility
-# np.random.seed(7)
+np.random.seed(7)
 # load the dataset but only keep the top n words, zero the rest
 max_tweet_words = 50
 
 
-BASE_DIR = '/Users/srensi/Documents/GitHub/side-effect-NLP/data/'
+BASE_DIR = '/Users/CharlesAkin-David/Documents/cs399_stefano/side-effect-NLP/data/'
 GLOVE_DIR = os.path.join(BASE_DIR, 'glove.twitter.27B')
 # TEXT_DATA_DIR = os.path.join(BASE_DIR, '20_newsgroup')
 MAX_SEQUENCE_LENGTH = 100
 MAX_NUM_WORDS = 20000
-EMBEDDING_DIM = 100
+EMBEDDING_DIM = 200
 VALIDATION_SPLIT = 0.2
 
 # first, build index mapping words in the embeddings set
@@ -44,7 +45,7 @@ VALIDATION_SPLIT = 0.2
 print('Indexing word vectors.')
 
 embeddings_index = {}
-with open(os.path.join(GLOVE_DIR, 'glove.twitter.27B.100d.txt')) as f:
+with open(os.path.join(GLOVE_DIR, 'glove.twitter.27B.200d.txt')) as f:
     for line in f:
         values = line.split()
         word = values[0]
@@ -153,23 +154,24 @@ model.add(embedding_layer)
 # model.add(LSTM(100, dropout=0.5, recurrent_dropout=0.25, return_sequences=True))
 # model.add(LSTM(100, dropout=0.8, recurrent_dropout=0.2))
 # model.add(Bidirectional(LSTM(100)))
-model.add(Bidirectional(LSTM(100, return_sequences=True, dropout=0.1, recurrent_regularizer=regularizers.l2(0.01), kernel_regularizer=regularizers.l2(0.01))))
+model.add(Bidirectional(LSTM(300, dropout=0.2, kernel_regularizer=regularizers.l2(7e-2), return_sequences=True)))
 model.add(BatchNormalization())
 # model.add(Bidirectional(LSTM(100,  return_sequences=True)))
-model.add(LSTM(100, return_sequences=True, recurrent_regularizer=regularizers.l2(0.01), kernel_regularizer=regularizers.l2(0.01)))
+model.add(Bidirectional(LSTM(200, dropout=0.1, kernel_regularizer=regularizers.l2(7e-2), return_sequences=True)))
 model.add(BatchNormalization())
-# model.add(LSTM(100,  return_sequences=True))
+# model.add(GRU(100, dropout=0.1, return_sequences=True))
+# model.add(BatchNormalization())
 # model.add(LSTM(100,  return_sequences=True))
 # model.add(LSTM(200,  return_sequences=True))
-model.add(LSTM(100, recurrent_regularizer=regularizers.l2(0.01)))
+model.add(GRU(100))
 model.add(BatchNormalization())
-model.add(Dense(10, activation='relu', kernel_regularizer=regularizers.l2(0.01)))
+model.add(Dense(10, activation='relu', kernel_regularizer=regularizers.l2(7e-2)))
 model.add(BatchNormalization())
-model.add(Dense(1, activation='sigmoid', kernel_regularizer=regularizers.l2(0.01)))
+model.add(Dense(1, activation='sigmoid', kernel_regularizer=regularizers.l2(7e-2)))
 adam = optimizers.Adam(lr=0.001, amsgrad=True, decay=1e-6)
 model.compile(loss='binary_crossentropy', optimizer=adam, metrics=['accuracy'])
 print(model.summary())
-model.fit(trainTweets, trainLabels, epochs=3, batch_size=256)
+model.fit(trainTweets, trainLabels, epochs=10, batch_size=256, shuffle=True)
 
 # Final evaluation of the model
 scores = model.evaluate(testTweets, testLabels, verbose=0)
@@ -177,3 +179,6 @@ print("Accuracy: %.2f%%" % (scores[1]*100))
 preds = model.predict_classes(testTweets)
 # print("Accuracy: %.2f%%" % (scores[1]*100))
 print(confusion_matrix(testLabels, preds))
+print(f1_score(testLabels, preds))
+print(f1_score(testLabels, preds, pos_label=0))
+
