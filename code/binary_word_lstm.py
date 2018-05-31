@@ -62,13 +62,23 @@ with open(os.path.join(GLOVE_DIR, 'glove.twitter.27B.100d.txt')) as f:
 
 
 # Import data
-with open('./binaryclassifier/binary_downloaded.tsv','r') as f:
+with open('../data/adr-pubmed.csv', 'r') as f:
+    pmed_pos = [[0, 0, 1, i[3:-3]] for i in f.readlines()[1:]]
+
+print(pmed_pos[1:10])
+
+with open('../data/no-adr-pubmed.csv', 'r') as f:
+    pmed_neg = [[0, 0, 0, i[3:-3]] for i in f.readlines()[1:]]
+
+with open('../data/binary_downloaded.tsv','rb') as f:
 	stuff = [ i.decode('utf-8').strip().split('\t')  for i in f.readlines() ]
 data_pos = [i for i in stuff if i[2] == '1']
 data_neg = [i for i in stuff if i[2] == '0']
 
+pmed = pmed_pos + pmed_neg
 data = data_pos + data_neg[:len(data_pos)]
 
+data = pmed + data
 # Shuffle the rows of the data for cross validation
 random.shuffle(data)
 
