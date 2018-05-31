@@ -53,22 +53,22 @@ with open(os.path.join(GLOVE_DIR, 'glove.twitter.27B.100d.txt')) as f:
 
 
 # clean up data
-# def clean_sentence(text):
-# 	# print(text)
-# 	sentence = nltk.tokenize.word_tokenize(text.replace('/', ' '))
-# 	sentence = [word for word in sentence if word.isalpha()]
-# 	sentence = [w.lower() for w in sentence if w not in stop_words]
-# 	return sentence
+def clean_sentence(text):
+	# print(text)
+	sentence = nltk.tokenize.word_tokenize(text.replace('/', ' '))
+	sentence = [word for word in sentence if word.isalpha()]
+	sentence = [w.lower() for w in sentence if w not in stop_words]
+	return sentence
 
 
 # Import data
 with open('../data/adr-pubmed.csv', 'r') as f:
-    pmed_pos = [[0, 0, 1, i[3:-3]] for i in f.readlines()[1:]]
+    pmed_pos = [[0, 0, 1, i[3:-6]] for i in f.readlines()[1:]]
 
 print(pmed_pos[1:10])
 
 with open('../data/no-adr-pubmed.csv', 'r') as f:
-    pmed_neg = [[0, 0, 0, i[3:-3]] for i in f.readlines()[1:]]
+    pmed_neg = [[0, 0, 0, i[3:-6]] for i in f.readlines()[1:]]
 
 with open('../data/binary_downloaded.tsv','rb') as f:
 	stuff = [ i.decode('utf-8').strip().split('\t')  for i in f.readlines() ]
@@ -179,7 +179,7 @@ model.add(Dense(1, activation='sigmoid', kernel_regularizer=regularizers.l2(0.01
 adam = optimizers.Adam(lr=0.001, amsgrad=True, decay=1e-6)
 model.compile(loss='binary_crossentropy', optimizer=adam, metrics=['accuracy'])
 print(model.summary())
-model.fit(trainTweets, trainLabels, epochs=3, batch_size=256)
+model.fit(trainTweets, trainLabels, epochs=3, batch_size=512)
 
 # Final evaluation of the model
 scores = model.evaluate(testTweets, testLabels, verbose=0)
