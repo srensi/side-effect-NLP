@@ -31,7 +31,7 @@ np.random.seed(7)
 max_tweet_words = 50
 
 
-BASE_DIR = '/Users/CharlesAkin-David/Documents/cs399_stefano/side-effect-NLP/data/'
+BASE_DIR = '/scratch/PI/rbaltman/srensi/data/'
 GLOVE_DIR = os.path.join(BASE_DIR, 'glove.twitter.27B')
 # TEXT_DATA_DIR = os.path.join(BASE_DIR, '20_newsgroup')
 MAX_SEQUENCE_LENGTH = 100
@@ -55,7 +55,7 @@ with open(os.path.join(GLOVE_DIR, 'glove.twitter.27B.200d.txt')) as f:
 
 # clean up data
 def clean_sentence(text):
-	# print(text)
+	#print(text)
 	sentence = nltk.tokenize.word_tokenize(text.replace('/', ' '))
 	sentence = [word for word in sentence if word.isalpha()]
 	sentence = [w.lower() for w in sentence if w not in stop_words]
@@ -63,30 +63,43 @@ def clean_sentence(text):
 
 
 # Import data
-with open('../data/adr-pubmed.csv', 'r') as f:
+with open('/scratch/PI/rbaltman/srensi/data/adr-pubmed.csv', 'r') as f:
     pmed_pos = [[0, 0, 1, i[3:-6]] for i in f.readlines()[1:]]
 
-print(pmed_pos[1:10])
+with open('/scratch/PI/rbaltman/srensi/data/adr-pubmed-2.csv', 'r') as f:
+    pmed_pos2 = [[0, 0, 1, i[3:-6]] for i in f.readlines()[1:]]
+# print(pmed_pos[1:10])
 
-with open('../data/no-adr-pubmed.csv', 'r') as f:
+with open('/scratch/PI/rbaltman/srensi/data/no-adr-pubmed.csv', 'r') as f:
     pmed_neg = [[0, 0, 0, i[3:-6]] for i in f.readlines()[1:]]
 
-with open('../data/binary_downloaded.tsv','rb') as f:
+with open('/scratch/PI/rbaltman/srensi/data/no-adr-pubmed-2.csv', 'r') as f:
+    pmed_neg2 = [[0, 0, 0, i[3:-6]] for i in f.readlines()[1:]]
+
+with open('/scratch/PI/rbaltman/srensi/data/binary_downloaded.tsv','rb') as f:
 	stuff = [ i.decode('utf-8').strip().split('\t')  for i in f.readlines() ]
 data_pos = [i for i in stuff if i[2] == '1']
 data_neg = [i for i in stuff if i[2] == '0']
 
-pmed = pmed_pos + pmed_neg
-extra_train_data = data_neg[len(data_pos):]
 
-train_data = pmed + extra_train_data
-test_data = data_pos + data_neg[:len(data_pos)]
+pmed = pmed_pos + pmed_pos2 + pmed_neg + pmed_neg2
+#extra_train_data = data_neg[len(data_pos):] # unncomment for no-shot learning
+#train_data = pmed + extra_train_data
+train_data = pmed
+#test_data = data_pos[:int(0.1*len(data_pos))] + data_neg[:len(data_pos)]
+#test_data = data_pos + data_neg[:len(data_pos)]
+test_data = data_pos + data_neg
+print("Mixed Data Unbalanced - 64 batch - 25 epochs - 80 train\n")
 
 # Shuffle the rows of the data for cross validation
 random.shuffle(train_data)
 random.shuffle(test_data)
-data = train_data + test_data
+data = train_data + test_data # uncomment to run on full dataset
 
+#data = data_neg[:len(data_pos)] + data_pos
+#data = data_neg + data_pos
+#data = pmed
+#random.shuffle(data)
 # Pull out Tweets and their labels
 Labels , Tweets = zip( *[ [label, tweet] for tweet_id, user_id, label, tweet in data] )
 
@@ -103,15 +116,20 @@ Tweets = pad_sequences(sequences, maxlen=MAX_SEQUENCE_LENGTH)
 Labels = np.array([ int( float( label ) ) for label in Labels])
 
 indices = np.arange(Tweets.shape[0])
-np.random.shuffle(indices)
-Tweets = Tweets[indices]
-Labels = Labels[indices]
-num_validation_samples = len(test_data)
+#np.random.shuffle(indices)
+#Tweets = Tweets[indices]
+#Labels = Labels[indices]
+#num_validation_samples = len(test_data) #uncomment for full dataset balanced
+num_validation_samples = int(0.2 * len(test_data)) #uncomment for full dataset unbalanced
+
+#num_validation_samples = 300
+#num_validation_samples = int(VALIDATION_SPLIT * Tweets.shape[0]) # uncomment for single datatype
 
 trainTweets = Tweets[:-num_validation_samples]
 trainLabels = Labels[:-num_validation_samples]
 testTweets = Tweets[-num_validation_samples:]
 testLabels = Labels[-num_validation_samples:]
+
 
 num_words = min(MAX_NUM_WORDS, len(word_index) + 1)
 embedding_matrix = np.zeros((num_words, EMBEDDING_DIM))
@@ -168,9 +186,11 @@ model.add(embedding_layer)
 # model.add(LSTM(100, dropout=0.5, recurrent_dropout=0.25, return_sequences=True))
 # model.add(LSTM(100, dropout=0.8, recurrent_dropout=0.2))
 # model.add(Bidirectional(LSTM(100)))
+#model.add(Bidirectional(LSTM(100, dropout=0.2, kernel_regularizer=regularizers.l2(7e-2), return_sequences=True)))
 model.add(Bidirectional(LSTM(300, dropout=0.2, kernel_regularizer=regularizers.l2(7e-2), return_sequences=True)))
 model.add(BatchNormalization())
 # model.add(Bidirectional(LSTM(100,  return_sequences=True)))
+#model.add(Bidirectional(LSTM(100, recurrent_regularizer=regularizers.l2(0.01), kernel_regularizer=regularizers.l2(7e-2), return_sequences=True)))
 model.add(Bidirectional(LSTM(200, dropout=0.1, kernel_regularizer=regularizers.l2(7e-2), return_sequences=True)))
 model.add(BatchNormalization())
 # model.add(GRU(100, dropout=0.1, return_sequences=True))
@@ -178,6 +198,7 @@ model.add(BatchNormalization())
 # model.add(LSTM(100,  return_sequences=True))
 # model.add(LSTM(200,  return_sequences=True))
 model.add(GRU(100))
+#model.add(LSTM(100, recurrent_regularizer=regularizers.l2(0.01)))
 model.add(BatchNormalization())
 model.add(Dense(10, activation='relu', kernel_regularizer=regularizers.l2(7e-2)))
 model.add(BatchNormalization())
@@ -185,7 +206,7 @@ model.add(Dense(1, activation='sigmoid', kernel_regularizer=regularizers.l2(7e-2
 adam = optimizers.Adam(lr=0.001, amsgrad=True, decay=1e-6)
 model.compile(loss='binary_crossentropy', optimizer=adam, metrics=['accuracy'])
 print(model.summary())
-model.fit(trainTweets, trainLabels, epochs=10, batch_size=512, shuffle=True)
+model.fit(trainTweets, trainLabels, epochs=25, batch_size=64, shuffle=True)
 
 # Final evaluation of the model
 scores = model.evaluate(testTweets, testLabels, verbose=0)
