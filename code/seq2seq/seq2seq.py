@@ -7,6 +7,7 @@ from keras.models import Model
 from keras.layers import Input
 from keras.layers import LSTM
 from keras.layers import Dense
+import numpy as np
 
 # generate a sequence of random integers
 def generate_sequence(length, n_unique):
@@ -14,24 +15,27 @@ def generate_sequence(length, n_unique):
 
 # prepare data for the LSTM
 def get_dataset(n_in, n_out, cardinality, n_samples):
-	X1, X2, y = list(), list(), list()
-	for _ in range(n_samples):
-		# generate source sequence
-		source = generate_sequence(n_in, cardinality)
-		# define padded target sequence
-		target = source[:n_out]
-		target.reverse()
-		# create padded input target sequence
-		target_in = [0] + target[:-1]
-		# encode
-		src_encoded = to_categorical([source], num_classes=cardinality)
-		tar_encoded = to_categorical([target], num_classes=cardinality)
-		tar2_encoded = to_categorical([target_in], num_classes=cardinality)
-		# store
-		X1.append(src_encoded)
-		X2.append(tar2_encoded)
-		y.append(tar_encoded)
-	return array(X1), array(X2), array(y)
+    X1, X2, y = list(), list(), list()
+    for _ in range(n_samples):
+            # generate source sequence
+            source = generate_sequence(n_in, cardinality)
+            # define padded target sequence
+            target = source[:n_out]
+            target.reverse()
+            # create padded input target sequence
+            target_in = [0] + target[:-1]
+            # encode
+            src_encoded = to_categorical([source], num_classes=cardinality)
+            tar_encoded = to_categorical([target], num_classes=cardinality)
+            tar2_encoded = to_categorical([target_in], num_classes=cardinality)
+            # store
+            X1.append(src_encoded)
+            X2.append(tar2_encoded)
+            y.append(tar_encoded)
+    X1 = np.squeeze(array(X1), axis=1) 
+    X2 = np.squeeze(array(X2), axis=1) 
+    y = np.squeeze(array(y), axis=1) 
+    return X1, X2, y
 
 # returns train, inference_encoder and inference_decoder models
 def define_models(n_input, n_output, n_units):
