@@ -1,6 +1,5 @@
 .DS_Store
 *logfile*
 *.tsv
-*.txt
 env/
 data/
