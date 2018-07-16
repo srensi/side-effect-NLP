@@ -88,9 +88,9 @@ def one_hot_decode(encoded_seq):
 	return [argmax(vector) for vector in encoded_seq]
 
 # configure problem
-n_features = 50 + 1
-n_steps_in = 6
-n_steps_out = 3
+n_features = 25 + 1
+n_steps_in = 15
+n_steps_out = 5
 # define model
 train, infenc, infdec = define_models(n_features, n_features, 128)
 train.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['acc'])
@@ -98,7 +98,7 @@ train.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['acc']
 X1, X2, y = get_dataset(n_steps_in, n_steps_out, n_features, 100000)
 print(X1.shape,X2.shape,y.shape)
 # train model
-train.fit([X1, X2], y, epochs=1)
+train.fit([X1, X2], y, epochs=3, batch_size=64)
 # evaluate LSTM
 total, correct = 100, 0
 for _ in range(total):

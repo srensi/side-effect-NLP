@@ -89,12 +89,16 @@ train_data = pmed
 #test_data = data_pos[:int(0.1*len(data_pos))] + data_neg[:len(data_pos)]
 #test_data = data_pos + data_neg[:len(data_pos)]
 test_data = data_pos + data_neg
-print("Mixed Data Unbalanced - 64 batch - 25 epochs - 80 train\n")
+#test_data = pmed
+print("Baseline Data - Pubmed (20/80) - 64 batch - 25 epochs \n")
 
 # Shuffle the rows of the data for cross validation
 random.shuffle(train_data)
 random.shuffle(test_data)
+
+#data = train_data[:100000] + test_data # uncomment to run on partial pubmed dataset
 data = train_data + test_data # uncomment to run on full dataset
+#data = test_data
 
 #data = data_neg[:len(data_pos)] + data_pos
 #data = data_neg + data_pos
@@ -120,7 +124,8 @@ indices = np.arange(Tweets.shape[0])
 #Tweets = Tweets[indices]
 #Labels = Labels[indices]
 #num_validation_samples = len(test_data) #uncomment for full dataset balanced
-num_validation_samples = int(0.2 * len(test_data)) #uncomment for full dataset unbalanced
+#num_validation_samples = int(0.8 * len(test_data)) #uncomment for full dataset unbalanced
+num_validation_samples = len(test_data)
 
 #num_validation_samples = 300
 #num_validation_samples = int(VALIDATION_SPLIT * Tweets.shape[0]) # uncomment for single datatype
@@ -206,7 +211,7 @@ model.add(Dense(1, activation='sigmoid', kernel_regularizer=regularizers.l2(7e-2
 adam = optimizers.Adam(lr=0.001, amsgrad=True, decay=1e-6)
 model.compile(loss='binary_crossentropy', optimizer=adam, metrics=['accuracy'])
 print(model.summary())
-model.fit(trainTweets, trainLabels, epochs=25, batch_size=64, shuffle=True)
+model.fit(trainTweets, trainLabels, epochs=25, batch_size=128, shuffle=True)
 
 # Final evaluation of the model
 scores = model.evaluate(testTweets, testLabels, verbose=0)
